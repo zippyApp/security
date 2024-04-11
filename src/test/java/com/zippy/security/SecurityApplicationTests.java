@@ -1,10 +1,10 @@
-package com.uis.entornos.proyectologincrud;
+package com.zippy.security;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProyectoLoginCrudApplicationTests {
+class SecurityApplicationTests {
 
     @Test
     void contextLoads() {

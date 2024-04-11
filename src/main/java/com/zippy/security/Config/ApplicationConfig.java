@@ -1,7 +1,9 @@
-package com.uis.entornos.proyectologincrud.Config;
+package com.zippy.security.Config;
 
-import com.uis.entornos.proyectologincrud.User.UserRepository;
+import com.netflix.discovery.converters.Auto;
+import com.zippy.security.repository.CredentialRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository userRepository;
+    private CredentialRepository credentialRepository;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws  Exception
     {
@@ -40,8 +43,13 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailService() {
-        return username -> userRepository.findByUsername(username)
+        return username -> credentialRepository.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+    }
+
+    @Autowired
+    public void setCredentialRepository(CredentialRepository credentialRepository) {
+        this.credentialRepository = credentialRepository;
     }
 
 

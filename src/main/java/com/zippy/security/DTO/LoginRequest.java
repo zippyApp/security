@@ -1,4 +1,4 @@
-package com.uis.entornos.proyectologincrud.Auth;
+package com.zippy.security.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
