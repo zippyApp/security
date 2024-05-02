@@ -1,16 +1,17 @@
-package com.uis.entornos.proyectologincrud.Auth;
+package com.zippy.security.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthResponse {
-
-    String token;
+public class RegisterRequest {
+    String username;
+    String password;
+    Long userId;
+    Long roleId;
 }

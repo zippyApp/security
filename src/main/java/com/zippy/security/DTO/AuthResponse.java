@@ -1,4 +1,4 @@
-package com.uis.entornos.proyectologincrud.Auth;
+package com.zippy.security.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-    String username;
-    String password;
-    String firstname;
-    String lastname;
+public class AuthResponse {
+    String token;
 }
