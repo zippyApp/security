@@ -39,4 +39,4 @@ The [`.gitignore`](".gitignore") file is set up to ignore certain files and dire
 
 ## Authentication Service
 
-The authentication service is implemented in the [`AuthService.java`]("src/main/java/com/uis/entornos/proyectologincrud/Auth/AuthService.java") file. This service handles the authentication logic for the application.
+The authentication service is implemented in the [`AuthServiceImpl.java`]("src/main/java/com/uis/entornos/proyectologincrud/Auth/AuthServiceImpl.java") file. This service handles the authentication logic for the application.

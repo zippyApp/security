@@ -2,6 +2,7 @@ package com.zippy.security.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -9,7 +10,9 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 @Table(name = "role")
 public class Role implements Serializable {
     @Id

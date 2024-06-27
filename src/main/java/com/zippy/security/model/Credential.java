@@ -2,14 +2,11 @@ package com.zippy.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Getter;
 
 import java.util.List;
 import java.util.Collection;
@@ -19,16 +16,19 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
+@Accessors(chain = true, fluent = false)
 @Table(name = "credential")
 public class Credential implements UserDetails{
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "credential_id_seq")
+  @SequenceGenerator(name = "credential_id_seq", sequenceName = "credential_id_seq", allocationSize = 1)
   private Long id;
 
-  @Column
+  @Column(name = "username")
   private String username;
 
-  @Column
+  @Column(name = "password")
   private String password;
 
   @Column(name="personal_information_id")
@@ -44,7 +44,7 @@ public class Credential implements UserDetails{
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-      return List.of(new SimpleGrantedAuthority((role.getName())));
+      return List.of(new SimpleGrantedAuthority(("user")));
   }
 
   @Override
@@ -66,4 +66,5 @@ public class Credential implements UserDetails{
   public boolean isEnabled() {
       return true     ;
   }
+
 }

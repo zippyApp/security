@@ -1,49 +1,42 @@
-package com.zippy.security.service;
+package com.zippy.security.service.impl;
 
-
-import com.zippy.security.DTO.LoginRequest;
-import com.zippy.security.DTO.RegisterRequest;
 import com.zippy.security.DTO.AuthResponse;
+import com.zippy.security.DTO.LoginRequest;
 import com.zippy.security.model.Credential;
 import com.zippy.security.repository.CredentialRepository;
+import com.zippy.security.service.interfaces.IAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements IAuthService {
 
     private CredentialRepository credentialRepository;
     private JwtService jwtService;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
 
-    public AuthResponse login(LoginRequest request) {
-
-        authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = credentialRepository.findByUsername(request.getUsername()).orElseThrow();
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
+    @Override
+    public String login(LoginRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.getUsername(),
+                request.getPassword())
+        );
+        Credential credential = credentialRepository.findByUsername(request.getUsername()).orElseThrow();
+        return jwtService.getToken(credential);
     }
 
-    public AuthResponse register(RegisterRequest request) {
-        Credential credential = Credential.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roleId(1L) // default role
-                .build();
-
-        credentialRepository.save(credential);
+    @Override
+    public AuthResponse register(Credential register) {
         return AuthResponse.builder()
-                .token(jwtService.getToken(credential))
-                .build();
+                .token(jwtService.getToken(credentialRepository.save(
+                        register.setPassword(passwordEncoder.encode(register.getPassword()))
+                ))).build();
     }
 
     @Autowired
@@ -64,5 +57,6 @@ public class AuthService {
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+
     }
 }

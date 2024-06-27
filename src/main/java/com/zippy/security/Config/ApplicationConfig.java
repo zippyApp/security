@@ -1,6 +1,5 @@
 package com.zippy.security.Config;
 
-import com.netflix.discovery.converters.Auto;
 import com.zippy.security.repository.CredentialRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,12 @@ public class ApplicationConfig {
     private CredentialRepository credentialRepository;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws  Exception
-    {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws  Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider()
-    {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -46,6 +43,7 @@ public class ApplicationConfig {
         return username -> credentialRepository.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found"));
     }
+
 
     @Autowired
     public void setCredentialRepository(CredentialRepository credentialRepository) {

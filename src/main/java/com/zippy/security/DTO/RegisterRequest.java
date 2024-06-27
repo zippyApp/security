@@ -1,17 +1,21 @@
 package com.zippy.security.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
-@Data
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-    String username;
-    String password;
-    Long userId;
-    Long roleId;
+public class RegisterRequest implements java.io.Serializable {
+    @NotBlank
+    private String username;
+    @NotBlank
+    private String password;
+    @NotNull
+    private Long personalInformationId;
+    @NotNull
+    private Long roleId;
 }
