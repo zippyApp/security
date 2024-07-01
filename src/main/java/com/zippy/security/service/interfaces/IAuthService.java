@@ -8,4 +8,6 @@ public interface IAuthService {
     String login(LoginRequest loginRequest);
 
     AuthResponse register(Credential credential);
+
+    String deleteAccount(String token);
 }

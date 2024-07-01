@@ -44,6 +44,13 @@ public class AuthController {
                 ResponseEntity.badRequest().body("Invalid");
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity deleteAccount(@RequestParam String token) {
+        return jwtService.validateToken(token) ?
+                ResponseEntity.ok(authService.deleteAccount(token)) :
+                ResponseEntity.badRequest().body("Invalid");
+    }
+
     @Autowired
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
