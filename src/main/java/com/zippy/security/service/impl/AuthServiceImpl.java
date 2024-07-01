@@ -39,6 +39,14 @@ public class AuthServiceImpl implements IAuthService {
                 ))).build();
     }
 
+    @Override
+    public String deleteAccount(String token) {
+        String username = jwtService.getUsernameFromToken(token);
+        Credential credential = credentialRepository.findByUsername(username).orElseThrow();
+        credentialRepository.delete(credential);
+        return "Account deleted";
+    }
+
     @Autowired
     public void setCredentialRepository(CredentialRepository credentialRepository) {
         this.credentialRepository = credentialRepository;
