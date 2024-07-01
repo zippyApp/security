@@ -6,9 +6,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Accessors(chain = true, fluent = false)
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthResponse {
     String token;
 }

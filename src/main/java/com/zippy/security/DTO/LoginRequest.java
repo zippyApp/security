@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @Builder
+@Accessors(chain = true, fluent = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true, fluent = false)
 public class LoginRequest {
     @NotBlank
     String username;

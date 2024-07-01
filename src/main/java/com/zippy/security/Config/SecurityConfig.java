@@ -20,7 +20,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest-> authRequest.requestMatchers(
                                 "/auth/**",
                                 "/api/v1/demo",
-                                "/api/v1/user/new"
+                                "/api/v1/user/new",
+                                "/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .build();
