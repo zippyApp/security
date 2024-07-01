@@ -1,5 +1,6 @@
 package com.zippy.security.model;
 
+import com.zippy.security.DTO.PersonalInformationDTO;
 import lombok.*;
 
 @Getter
@@ -8,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class Register implements java.io.Serializable{
     private Credential credential;
-    private PersonalInformation personalInformation;
+    private PersonalInformationDTO personalInformation;
 }

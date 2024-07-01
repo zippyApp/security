@@ -2,13 +2,9 @@ package com.zippy.security.controller;
 
 import com.zippy.security.DTO.AuthResponse;
 import com.zippy.security.DTO.LoginRequest;
-import com.zippy.security.DTO.PersonalInformationDTO;
 import com.zippy.security.DTO.RegisterRequest;
 import com.zippy.security.clients.interfaces.PersonalInformationClient;
-import com.zippy.security.mappers.PersonalInformationMapper;
 import com.zippy.security.mappers.RegisterMapper;
-import com.zippy.security.model.PersonalInformation;
-import com.zippy.security.model.Register;
 import com.zippy.security.service.impl.JwtService;
 import com.zippy.security.service.interfaces.IAuthService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +23,6 @@ public class AuthController {
     private JwtService jwtService;
     private RegisterMapper registerMapper;
     private PersonalInformationClient personalInformationClient;
-    private PersonalInformationMapper personalInformationMapper;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
@@ -37,18 +32,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-//        Register register = registerMapper.RegisterRequestToRegister(request);
-//        PersonalInformation personalInformation = personalInformationMapper
-//                .PersonalInformationDTOToPersonalInformation(personalInformationClient.newPersonalInformation(register.getPersonalInformation()));
-//        register.getCredential().setPersonalInformationId(personalInformation.getId());
-//        return ResponseEntity.ok(authService.register(register.getCredential()));
         return Optional.of(request)
                 .map(registerMapper::RegisterRequestToRegister)
                 .map(register -> {
-                    register.getCredential().setPersonalInformationId(personalInformationMapper
-                            .PersonalInformationDTOToPersonalInformation(personalInformationClient.create(register.
+                    register.getCredential().setPersonalInformationId(
+                            personalInformationClient.create(
+                                    register.
                                     getPersonalInformation()
-                            )).getId()
+                            ).getId()
                     );
                     return register;
                 })
@@ -58,14 +49,14 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity validateToken(@RequestParam String token) {
+    public ResponseEntity<?> validateToken(@RequestParam String token) {
         return jwtService.validateToken(token) ?
                 ResponseEntity.ok("Valid") :
                 ResponseEntity.badRequest().body("Invalid");
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity deleteAccount(@RequestParam String token) {
+    public ResponseEntity<?> deleteAccount(@RequestParam String token) {
         return jwtService.validateToken(token) ?
                 ResponseEntity.ok(authService.deleteAccount(token)) :
                 ResponseEntity.badRequest().body("Invalid");
@@ -89,10 +80,5 @@ public class AuthController {
     @Autowired
     public void setPersonalInformationClient(PersonalInformationClient personalInformationClient) {
         this.personalInformationClient = personalInformationClient;
-    }
-
-    @Autowired
-    public void setPersonalInformationMapper(PersonalInformationMapper personalInformationMapper) {
-        this.personalInformationMapper = personalInformationMapper;
     }
 }

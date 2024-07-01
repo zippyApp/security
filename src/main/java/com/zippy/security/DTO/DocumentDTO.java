@@ -1,15 +1,14 @@
 package com.zippy.security.DTO;
 
-import com.zippy.security.model.DocumentType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class DocumentDTO {
     private Long id;
     @NotEmpty
