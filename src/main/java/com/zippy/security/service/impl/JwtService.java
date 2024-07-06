@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.security.Key;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@CrossOrigin(origins = "*")
 public class JwtService {
     private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
     private static final long EXPIRATION_TIME = 1000 * 3600 * 24; // 24 hours
