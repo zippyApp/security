@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,11 +33,12 @@ public class Credential implements UserDetails{
   @Column(name = "password")
   private String password;
 
+  @OnDelete(action = OnDeleteAction.CASCADE)
   @Column(name="personal_information_id")
-  private long personalInformationId;
+  private Long personalInformationId;
 
   @Column(name="role_id")
-  private long roleId;
+  private Long roleId;
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)

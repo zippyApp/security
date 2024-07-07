@@ -3,10 +3,10 @@ package com.zippy.security.controller;
 import com.zippy.security.DTO.AuthResponse;
 import com.zippy.security.DTO.LoginRequest;
 import com.zippy.security.DTO.RegisterRequest;
-import com.zippy.security.clients.interfaces.PersonalInformationClient;
 import com.zippy.security.mappers.RegisterMapper;
 import com.zippy.security.service.impl.JwtService;
 import com.zippy.security.service.interfaces.IAuthService;
+import feign.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,43 +22,47 @@ public class AuthController {
     private IAuthService authService;
     private JwtService jwtService;
     private RegisterMapper registerMapper;
-    private PersonalInformationClient personalInformationClient;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(AuthResponse.builder().token(authService.login(request)).build()
-        );
+        return authService.login(request)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        return Optional.of(request)
-                .map(registerMapper::RegisterRequestToRegister)
-                .map(register -> {
-                    register.getCredential().setPersonalInformationId(
-                            personalInformationClient.create(
-                                    register.
-                                    getPersonalInformation()
-                            ).getId()
-                    );
-                    return register;
-                })
-                .map(register -> authService.register(register.getCredential()))
+        return Optional.ofNullable(registerMapper.RegisterRequestToRegister(request))
+                .flatMap(authService::register)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(@RequestParam String token) {
+    public ResponseEntity<?> validateToken(@RequestHeader String token) {
         return jwtService.validateToken(token) ?
                 ResponseEntity.ok("Valid") :
                 ResponseEntity.badRequest().body("Invalid");
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteAccount(@RequestParam String token) {
+    public ResponseEntity<?> deleteAccount(@RequestHeader String token) {
         return jwtService.validateToken(token) ?
                 ResponseEntity.ok(authService.deleteAccount(token)) :
+                ResponseEntity.badRequest().body("Invalid");
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getPersonalInformation(@RequestHeader String token) {
+        return jwtService.validateToken(token) ?
+                ResponseEntity.ok(authService.getPersonalInformation(token)) :
+                ResponseEntity.badRequest().body("Invalid");
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestHeader String token, @RequestBody String newPassword) {
+        return jwtService.validateToken(token) ?
+                ResponseEntity.ok(authService.changePassword(token, newPassword)) :
                 ResponseEntity.badRequest().body("Invalid");
     }
 
@@ -75,10 +79,5 @@ public class AuthController {
     @Autowired
     public void setRegisterMapper(RegisterMapper registerMapper) {
         this.registerMapper = registerMapper;
-    }
-
-    @Autowired
-    public void setPersonalInformationClient(PersonalInformationClient personalInformationClient) {
-        this.personalInformationClient = personalInformationClient;
     }
 }
